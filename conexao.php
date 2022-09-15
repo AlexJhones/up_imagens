@@ -3,9 +3,9 @@
 $host = "localhost";
 $user = "root";
 $pass = "";
-$bd = "arquivos";
+$bd = "upload";
 
-$mysqli = new mysqli($host, $user, $pass, $arquivos);
+$mysqli = new mysqli($host, $user, $pass, $bd);
 
 /* Check Connection */
 if($mysqli->connect_errno){
