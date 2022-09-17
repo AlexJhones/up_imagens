@@ -5,8 +5,66 @@
     font-family: Nunito;
 }
 
+.main-nav {
+    width: 100%;
+    padding: 20px;
+    background-color: rgb(226, 226, 226);
+}
+
+.main-header {
+    width: 100%;
+    padding: 20px;
+    text-align: center;
+}
+
+.main-header h2 {
+    font-size: 22px;
+    font-family: Nunito;
+    font-weight: 300;
+}
+
+.main {
+    display: grid;
+    place-items: center;    
+}
+
+/* Botão que funciona com a Label */
+.label-bnt-file {
+    padding: 20px 10px;
+    text-align: center;
+    background-color: rgb(81, 113, 255);
+    margin-bottom: 15px;
+    width: 200px;
+    border: 0;
+    border-radius: 5px;
+    cursor: pointer;
+    display: block;
+    color: #FFF;    
+}
+
+.bnt-file {
+    display: none;
+}
+/* */
+
+.bnt-submit {
+    padding: 20px;
+    width: 150px;
+    background-color: rgb(81, 113, 255);
+    border: 0;
+    border-radius: 5px;
+}
+
 .container {
     display: grid;
     place-items: center;
+    text-align: center;
+}
+
+footer {
+    margin-top: 25px;
+    padding: 20px;
+    background-color: blueviolet;
+    color: #212121;
     text-align: center;
 }

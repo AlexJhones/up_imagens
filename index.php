@@ -38,30 +38,30 @@ $sql_query = $mysqli->query("SELECT * FROM arquivos") or die($mysqli->error);
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="./styles.css?v1">
     <!-- FONTS GOOGLE -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;300&display=swap" rel="stylesheet">
     <title>upImagens</title> <!-- New title: Vision -->
 </head>
 <body>
-<div class="container">
 
-    <header>
+    <nav class="main-nav">
+    MENU
+    </nav>
+
+    <header class="main-header">
         <h1>Envie e compartilhe suas imagens de forma simples e direta.</h1>
         <h2>Crie álbuns e compartilhe de modo público ou privado, protegido por senha ou qualquer pessoa que tenha o link.</h2>
     </header>
 
-    <nav>
-
-    </nav>
-
-    <main>
+    <main class="main">
         <form method="POST" enctype="multipart/form-data" action="">
-            <!-- <p><label for="">Selecione o arquivo</label></p> -->
-            <input name="arquivo" type="file"><br>
-            <button name="upload" type="submit">Enviar Arquivos</button>
+            <label for="arquivo" class="label-bnt-file">Selecione o arquivo</label>
+            <input id="arquivo" class="bnt-file" name="arquivo" type="file">
+
+            <!-- <button class="bnt-submit" name="upload" type="submit">Enviar Arquivos</button>  -->
         </form>
 
         <h2>Lista de Arquivos</h2>
@@ -86,6 +86,5 @@ $sql_query = $mysqli->query("SELECT * FROM arquivos") or die($mysqli->error);
 
     <footer>O uso do upImagens constitui a aceitação de nossos Termos de Serviço e Política de Privacidade.</footer>
 
-</div>
 </body>
 </html>
