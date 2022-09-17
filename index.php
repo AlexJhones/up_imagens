@@ -1,18 +1,28 @@
 <?php
-
 include("conexao.php");
 
-if(isset($_FILES['arquivo'])) {
-    $arquivo = $_FILES['arquivo'];
+if(isset($_GET['deletar'])) {
+    $id = intval($_GET['deletar']);
+    $sql_query = $mysqli->query("SELECT * FROM arquivos WHERE id = '$id'") or die($mysqli->error);
+    $arquivo = $sql_query->fetch_assoc();
+    if(unlink($arquivo['path'])) {
+        $deu_certo = $sql_query = $mysqli->query("DELETE FROM arquivos WHERE id = '$id'") or die($mysqli->error);
+        if($deu_certo)
+        echo "<p>Arquivo excluído com sucesso.</p>";
+    }
+}
 
-    if($arquivo['error'])
+function enviarArquivo ($error, $size, $name, $tmp_name) {
+    include("conexao.php");
+
+    if($error)
     die('Falha ao enviar arquivo! Por favor, tente novamente.');
 
-    if($arquivo['size'] > 2097152)
+    if($size > 2097152)
     die('Arquivo muito grande! MAX: MB');
     
     $pasta = "arquivos/";
-    $nomeDoArquivo = $arquivo['name'];
+    $nomeDoArquivo = $name;
     $novoNomeDoArquivo = uniqid();
     $extensao = strtolower(pathinfo($nomeDoArquivo, PATHINFO_EXTENSION));
 
@@ -20,15 +30,33 @@ if(isset($_FILES['arquivo'])) {
         die('Tipo de arquivo não aceito!');
 
     $path = $pasta . $novoNomeDoArquivo . "." . $extensao;
-    $deuCerto = move_uploaded_file($arquivo["tmp_name"], $path);
+    $deu_certo = move_uploaded_file($tmp_name, $path);
 
-    if($deuCerto) {
+    if($deu_certo) {
         $mysqli->query("INSERT INTO arquivos (name_arquivo, path) VALUES('$nomeDoArquivo', '$path')") or die($mysqli->error);
-        echo "<p>Arquivo enviado com sucesso. Para acessá-lo, <a target=\"_blank\" href=\"arquivos/$novoNomeDoArquivo.$extensao\">clique aqui.</a></p>";
+        return true;
     } else
-        echo '<p>Falha ao enviar arquivo!</p>';
-
+        return false;
 }
+
+if(isset($_FILES['arquivos'])) {
+    $arquivos = $_FILES['arquivos'];
+    $tudo_certo = true;
+    foreach($arquivos['name'] as $index => $arq){
+        $deu_certo = enviarArquivo ($arquivos['error'][$index], $arquivos['size'][$index], $arquivos['name'][$index], $arquivos["tmp_name"][$index]);
+        if(!$deu_certo) {
+            $tudo_certo = false;
+        }
+    }
+
+    if($tudo_certo) {
+        echo "<p>Todos os arquivos foram enviados com sucesso.</p>";
+    }
+    else {
+        echo "<p>Falha ao enviar arquivos.</p>";
+    }
+}
+
 $sql_query = $mysqli->query("SELECT * FROM arquivos") or die($mysqli->error);
 ?>
 
@@ -59,9 +87,9 @@ $sql_query = $mysqli->query("SELECT * FROM arquivos") or die($mysqli->error);
     <main class="main">
         <form method="POST" enctype="multipart/form-data" action="">
             <label for="arquivo" class="label-bnt-file">Selecione o arquivo</label>
-            <input id="arquivo" class="bnt-file" name="arquivo" type="file">
+            <input multiple id="arquivo" class="bnt-file" name="arquivos[]" type="file">
 
-            <!-- <button class="bnt-submit" name="upload" type="submit">Enviar Arquivos</button>  -->
+            <button class="bnt-submit" name="upload" type="submit">Enviar Arquivos</button>
         </form>
 
         <h2>Lista de Arquivos</h2>
@@ -70,6 +98,7 @@ $sql_query = $mysqli->query("SELECT * FROM arquivos") or die($mysqli->error);
                 <th>Visualizar</th>
                 <th>Baixar arquivo</th>
                 <th>Data do envio</th>
+                <th>Deletar</th>
             </thead>
 
             <tbody>
@@ -78,6 +107,7 @@ $sql_query = $mysqli->query("SELECT * FROM arquivos") or die($mysqli->error);
                     <th><a target="_blank" href="<?php echo $arquivo['path'] ?>"><img height="50" src="<?php echo $arquivo['path'] ?>" alt=""></a></th>
                     <td><a href="<?php echo $arquivo['path'] ?>" download="<?php $arquivo['name_arquivo']; ?>"><?php echo $arquivo['name_arquivo']; ?></a></td>
                     <td><?php echo date("d/m/Y H:i", strtotime($arquivo['data_upload'])); ?></td>
+                    <td><a href="index.php?deletar=<?php echo $arquivo['id'] ?>">Deletar</a></td>
                 </tr>
                 <?php } ?>
             </tbody>
